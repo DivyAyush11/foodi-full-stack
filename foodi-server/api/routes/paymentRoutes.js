@@ -1,6 +1,28 @@
-const verifyToken = require("../middleware/verifyToken");
-const router = require("./menuRoutes");
+const express = require('express')
+const mongoose = require('mongoose');
+const router = express.Router();
 
+const Payment = require('../models/Payments')
+const Cart =require('../models/Carts');
+const ObjectId = mongoose.Types.ObjectId
+// Token Verification
+const verifyToken = require("../middleware/verifyToken");
+
+//Post Payment to db
+// Verify token and remove the items from cart after successful payemnt
+router.post('/',verifyToken,async (req,res)=>{
+    const payment = req.body;
+    try{
+        const paymentRequest  = await Payment.create(payment);
+        // delete Cart after payment
+        const cartIds = payment.cartItems.map(id => new ObjectId(id));
+
+        const deleteCartRequest = await Cart.deleteMany({_id:{$in:cartIds}})
+        res.status(200).json({paymentRequest, deleteCartRequest})
+    }catch(error){
+        res.status(404).json({message:error.message})
+    }
+})
 
 router.get('/',verifyToken,async (req,res)=>{
     const email = req.query.email;
