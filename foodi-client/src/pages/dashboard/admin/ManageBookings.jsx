@@ -3,8 +3,8 @@ import useAuth from '../../../hooks/useAuth'
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import {GiConfirmed} from "react-icons/gi"
+import {FaTrashAlt} from "react-icons/fa" 
 import Swal from "sweetalert2"
-
 
 const ManageBookings = () => {
     const {user,loading} = useAuth();
@@ -57,7 +57,8 @@ const handleConfirm = async(item)=>{
               </tr>
             </thead>
             <tbody>
-              {orders.map((item, index) => (
+              {
+              orders.map((item, index) => (
                 <tr key={index}>
                   <th>{index + 1}</th>
                   <td>{item.email}</td>
@@ -78,7 +79,8 @@ const handleConfirm = async(item)=>{
                       </button>
                   </td>
                 </tr>
-              ))}
+              ))
+              }
             </tbody>
           </table>
         </div>
