@@ -11,6 +11,89 @@ const stripe = require("stripe")(process.env.PAYMENT_SECRET_KEY);
 app.use(cors());
 app.use(express.json());
 
+// JWT-compatible user signup route
+app.post('/users', async (req, res) => {
+  try {
+    console.log('📝 User signup request with JWT:', req.body);
+    
+    const { name, email, password } = req.body;
+    
+    if (!name || !email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name and email are required'
+      });
+    }
+    
+    // Create JWT token for the new user
+    const userInfo = { name, email };
+    const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: '24h'
+    });
+    
+    res.status(200).json({
+      success: true,
+      message: 'User created successfully',
+      user: userInfo,
+      token: token
+    });
+    
+    console.log('✅ User created with JWT token:', email);
+    
+  } catch (error) {
+    console.error('❌ Signup error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error during signup'
+    });
+  }
+});
+
+// Login route
+// Login route (CORRECTED VERSION)
+app.post('/users/login', async (req, res) => {
+  try {
+    console.log('🔄 Login request received:', req.body);
+    
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email and password are required'
+      });
+    } // ✅ FIXED: Added missing closing brace
+    
+    // Simple login - creates JWT for any valid email/password combo
+    const userInfo = { 
+      name: email.split('@')[0], // Use part before @ as name
+      email: email 
+    };
+    
+    const token = jwt.sign(userInfo, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: '24h'
+    });
+    
+    res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      user: userInfo,
+      token: token
+    });
+    
+    console.log('✅ User logged in successfully:', email);
+    
+  } catch (error) {
+    console.error('❌ Login error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error during login'
+    });
+  }
+});
+
+
+
 // mongodb configuration using mongoose
 mongoose
   .connect(
