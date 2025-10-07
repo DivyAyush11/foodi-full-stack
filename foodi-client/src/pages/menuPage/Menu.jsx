@@ -11,20 +11,41 @@ const Menu = () => {
   const [itemsPerPage] = useState(8); // Number of items to display per page
 
   useEffect(() => {
-    // Fetch data from the backend
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:6001/menu");
-        const data = await response.json();
-        setMenu(data);
-        setFilteredItems(data); // Initially, display all items
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  // Enhanced fetch data with better debugging
+  const fetchData = async () => {
+    try {
+      console.log('🔄 Fetching menu data from backend...');
+      
+      const response = await fetch("http://localhost:6001/menu");
+      
+      console.log('📡 Response status:', response.status);
+      console.log('📡 Response ok:', response.ok);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
+      
+      const data = await response.json();
+      
+      console.log('✅ Menu data received:', data);
+      console.log('📊 Number of items:', data?.length);
+      
+      setMenu(data);
+      setFilteredItems(data); // Initially, display all items
+      
+    } catch (error) {
+      console.error("❌ Error fetching menu data:", error);
+      console.error("🚨 Backend might not be running on port 6001");
+      
+      // Set empty arrays as fallback
+      setMenu([]);
+      setFilteredItems([]);
+    }
+  };
 
-    fetchData();
-  }, []);
+  fetchData();
+}, []);
+
 
   const filterItems = (category) => {
     const filtered =
@@ -75,7 +96,10 @@ const Menu = () => {
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  // const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = (filteredItems && Array.isArray(filteredItems)) 
+  ? filteredItems.slice(indexOfFirstItem, indexOfLastItem)
+  : [];
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 

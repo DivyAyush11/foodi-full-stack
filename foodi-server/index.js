@@ -14,11 +14,11 @@ app.use(express.json());
 // mongodb configuration using mongoose
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@food-client.pk8ejxf.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@foodi-cluster.jbauahi.mongodb.net/fooddelivery?retryWrites=true&w=majority`
   )
-  .then(
+  .then(() => {
     console.log("MongoDB Connected Successfully!")
-  )
+  })
   .catch((error) => console.log("Error connecting to MongoDB", error));
 
 // jwt authentication
