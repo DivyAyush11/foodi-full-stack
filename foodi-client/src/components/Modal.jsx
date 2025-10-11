@@ -36,7 +36,7 @@ const Modal = () => {
           .post("http://localhost:6001/users", userInfor)
           .then((response) => {
             // console.log(response);
-            alert("Signin successful!");
+            alert("Sign-in successful!");
             navigate(from, { replace: true });
           });
         // console.log(user);
@@ -63,7 +63,7 @@ const Modal = () => {
           .post("http://localhost:6001/users", userInfor)
           .then((response) => {
             // console.log(response);
-            alert("Signin successful!");
+            alert("Sign-in successful!");
             navigate("/");
           });
       })
@@ -142,7 +142,7 @@ const Modal = () => {
             <p className="text-center my-2">
               Donot have an account?
               <Link to="/signup" className="underline text-red ml-1">
-                Signup Now
+                Sign-Up Now
               </Link>
             </p>
           </form>

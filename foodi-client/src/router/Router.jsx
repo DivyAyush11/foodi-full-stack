@@ -87,8 +87,6 @@ const router = createBrowserRouter([
         }
       ]
     }
-  ], {
-    basename: "/foodi-full-stack"
-  });
+  ]);
 
   export default router;
